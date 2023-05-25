@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, View, TouchableOpacity, Animated } from 'react-native';
+import { StyleSheet, View, TouchableOpacity, Animated, Text} from 'react-native';
 import { AntDesign } from '@expo/vector-icons'
 import React from 'react';
 
@@ -9,13 +9,25 @@ const translateXValue2 = parseFloat("50%");
 
 
 const Circle = ({ onPress, animatedValue }) => {
+  const inputRange = [0, 0.001, 0.5, 0.501, 1];
+
+  const containerBg = animatedValue.interpolate({
+    inputRange,
+    outputRange: ['gold', 'gold', 'gold', '#444', '#444']
+  })
+  const circleBg = animatedValue.interpolate({
+    inputRange,
+    outputRange: ['#444', '#444', '#444', 'gold', 'gold']
+  })
   return (
-    <View style={[StyleSheet.absoluteFillObject, styles.circleContainer]}>
+    <Animated.View style={[StyleSheet.absoluteFillObject, styles.circleContainer, {
+      backgroundColor: containerBg
+    }]}>
       <Animated.View style={[styles.circle, {
+        backgroundColor: circleBg,
         transform: [
           {
             perspective: 400,
-
           },
           {
             rotateY: animatedValue.interpolate({
@@ -44,13 +56,13 @@ const Circle = ({ onPress, animatedValue }) => {
           </View>
         </TouchableOpacity>
       </Animated.View>
-    </View>
+    </Animated.View>
   );
 };
 
 export default function App() {
   const animatedValue = React.useRef(new Animated.Value(0)).current;
-  const animation = (toValue) => 
+  const animation = (toValue) =>
     Animated.timing(animatedValue, {
       toValue,
       duration: 3000,
